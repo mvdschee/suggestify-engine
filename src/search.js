@@ -18,7 +18,7 @@ const allowCors = (fn) => async (req, res) => {
 	// const origin = req.headers.origin;
 
 	// if (allowedOrigins.indexOf(origin) > -1) res.setHeader('Access-Control-Allow-Origin', origin);
-	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Origin', 'https://suggestify.maxvanderschee.nl/');
 	res.setHeader('Access-Control-Allow-Credentials', true);
 	res.setHeader('Access-Control-Allow-Methods', 'POST');
 	res.setHeader(
