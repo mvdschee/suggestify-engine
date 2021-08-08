@@ -1,0 +1,17 @@
+{
+	"name": "suggestify-serverless",
+	"version": "1.0.0",
+	"author": "Max van der Schee",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"build": "vite build && cd api && yarn",
+		"serve": "vercel dev"
+	},
+	"devDependencies": {
+		"vite": "^2.4.4"
+	},
+	"dependencies": {
+		"lambda-rate-limiter": "^3.0.0"
+	}
+}
