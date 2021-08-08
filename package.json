@@ -1,7 +1,7 @@
 {
 	"name": "suggestify-serverless",
 	"version": "1.0.0",
-	"author": "Max van der Schee",
+	"author": "Max van der Schee <hello@maxvanderschee.nl>",
 	"license": "MIT",
 	"private": true,
 	"scripts": {
