@@ -5,8 +5,7 @@
 	"license": "MIT",
 	"private": true,
 	"scripts": {
-		"build": "vite build && cd api && yarn",
-		"serve": "vercel dev"
+		"build": "vite build && cd api && yarn"
 	},
 	"devDependencies": {
 		"vite": "^2.4.4"
