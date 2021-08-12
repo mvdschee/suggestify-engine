@@ -1,6 +1,7 @@
 import { multiSearchHandler } from './core/multi';
 import { singleSearchHandler } from './core/single';
 const _items = require('./items.json');
+const _itemsSorted = require('./sorted.json');
 const _sugestions = require('./suggestions.json');
 const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
@@ -39,6 +40,8 @@ const handler = async (req, res) => {
 			let start = process.hrtime();
 			const items = await searchHandler(search.toLowerCase());
 			let stop = process.hrtime(start);
+
+			console.log((stop[0] * 1e9 + stop[1]) / 1e9);
 			return res
 				.status(200)
 				.json({ type: items.length ? 'results' : 'empty', items, time: (stop[0] * 1e9 + stop[1]) / 1e9 });
@@ -48,10 +51,10 @@ const handler = async (req, res) => {
 };
 
 const searchHandler = (search) => {
-	if (search.lenght >= 3) {
-		return singleSearchHandler(search, _items);
+	if (search.length <= 3) {
+		return singleSearchHandler(search, _items, _itemsSorted);
 	} else {
-		return multiSearchHandler(search, _items);
+		return multiSearchHandler(search, _items, _itemsSorted);
 	}
 };
 

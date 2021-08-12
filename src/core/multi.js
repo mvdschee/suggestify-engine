@@ -1,10 +1,11 @@
 import { levenshtein } from './utils';
 import { config } from './config';
-export async function multiSearchHandler(search, words) {
+export async function multiSearchHandler(search, items, sortedItems) {
 	const list = {
 		match: [],
 		alt: [],
 	};
+	const char = search.charAt(0);
 	let results = [];
 
 	const wordsMatch = (item) => {
@@ -14,6 +15,7 @@ export async function multiSearchHandler(search, words) {
 		return;
 	};
 
+	// TODO: Alt words doesn't fit in new logic
 	const AltMatch = (item) => {
 		const distance = levenshtein(item.toLowerCase(), search);
 
@@ -21,9 +23,14 @@ export async function multiSearchHandler(search, words) {
 		return;
 	};
 
-	for (let i = 0; i < words.length; i++) {
-		wordsMatch(words[i]);
-		AltMatch(words[i]);
+	if (sortedItems[char]) {
+		for (let i = 0; i < sortedItems[char].length; i++) {
+			wordsMatch(sortedItems[char][i]);
+		}
+	} else {
+		for (let i = 0; i < words.length; i++) {
+			wordsMatch(items[i]);
+		}
 	}
 
 	const sortMatches = sortResults(list['match'], search);
