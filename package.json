@@ -5,6 +5,7 @@
 	"license": "MIT",
 	"private": true,
 	"scripts": {
+		"pre:build": "node -e 'require(`./src/pre-build`).init()'",
 		"build": "vite build && cd api && yarn"
 	},
 	"devDependencies": {
