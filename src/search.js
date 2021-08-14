@@ -25,7 +25,15 @@ const allowCors = (fn) => async (req, res) => {
 
 const handler = async (req, res) => {
 	const { headers, body } = req;
-	const bodyObj = JSON.parse(body);
+	let bodyObj;
+
+	// JSON stringify check
+	try {
+		bodyObj = JSON.parse(body);
+	} catch (e) {
+		bodyObj = body;
+	}
+
 	const search = bodyObj.search ? sanitize(bodyObj.search.trim()) : null;
 
 	try {
@@ -41,7 +49,6 @@ const handler = async (req, res) => {
 			const items = await searchHandler(search.toLowerCase());
 			let stop = process.hrtime(start);
 
-			console.log((stop[0] * 1e9 + stop[1]) / 1e9);
 			return res
 				.status(200)
 				.json({ type: items.length ? 'results' : 'empty', items, time: (stop[0] * 1e9 + stop[1]) / 1e9 });

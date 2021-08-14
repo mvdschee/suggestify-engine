@@ -2,17 +2,17 @@ const _items = require('../api/items.json');
 const fs = require('fs');
 
 module.exports.init = () => {
-	console.log('test');
-	const test = {};
+	const sorted = {};
 
 	for (let a = 0; a < _items.length; a++) {
 		const char = _items[a].charAt(0);
+		const item = _items[a].toLowerCase();
 
-		if (test[char]) test[char].push(_items[a]);
-		else test[char] = [_items[a]];
+		if (sorted[char]) sorted[char].push(item);
+		else sorted[char] = [item];
 	}
 
-	writeToFile(test);
+	writeToFile(sorted);
 };
 
 function writeToFile(obj) {
