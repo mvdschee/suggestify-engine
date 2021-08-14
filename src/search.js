@@ -24,7 +24,15 @@ const allowCors = (fn) => async (req, res) => {
 
 const handler = async (req, res) => {
 	const { headers, body } = req;
-	const bodyObj = JSON.parse(body);
+	let bodyObj;
+
+	// JSON stringify check
+	try {
+		bodyObj = JSON.parse(body);
+	} catch (e) {
+		bodyObj = body;
+	}
+
 	const search = bodyObj.search ? sanitize(bodyObj.search.trim()) : null;
 
 	try {
@@ -48,7 +56,7 @@ const handler = async (req, res) => {
 };
 
 const searchHandler = (search) => {
-	if (search.lenght >= 3) {
+	if (search.lenght <= 3) {
 		return singleSearchHandler(search, _items);
 	} else {
 		return multiSearchHandler(search, _items);
