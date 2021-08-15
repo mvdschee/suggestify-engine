@@ -16,9 +16,7 @@ const rateLimit = require('lambda-rate-limiter')({
  * @returns {Promise<Response>} Response
  */
 const handler = async (req, res) => {
-	const { headers, body } = req;
-	let userInput;
-	let bodyObj;
+	const { headers, query } = req;
 
 	try {
 		await rateLimit.check(config.RATELIMIT_CAP, headers['x-real-ip']);
@@ -26,15 +24,9 @@ const handler = async (req, res) => {
 		return res.status(429).send(config.RATELIMIT_TEXT);
 	}
 
-	try {
-		bodyObj = JSON.parse(body);
-	} catch (e) {
-		bodyObj = body;
-	}
+	const userInput = query.q ? sanitize(query.q) : null;
 
-	if (bodyObj.search) userInput = sanitize(bodyObj.search);
-
-	if (!userInput) return res.status(200).json({ type: 'suggestions', items: _recommended, time: 0 });
+	if (!userInput) return res.status(200).json({ type: 'suggestions', items: _recommended, time: '0ms' });
 	else
 		try {
 			let start = process.hrtime();
