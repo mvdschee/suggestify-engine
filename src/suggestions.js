@@ -44,7 +44,7 @@ const handler = async (req, res) => {
 			return res.status(200).json({
 				type: sortedItems.length ? 'results' : 'empty',
 				items: sortedItems,
-				time: (stop[0] * 1e9 + stop[1]) / 1e9,
+				time: `${(stop[0] * 1e3 + stop[1] / 1e6).toFixed(2)}ms`,
 			});
 		} catch (error) {
 			return res.status(500).send(config.INTERNAL_ERROR);
