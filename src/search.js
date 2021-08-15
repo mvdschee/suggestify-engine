@@ -1,18 +1,18 @@
-import { multiSearchHandler } from './core/multi';
-import { singleSearchHandler } from './core/single';
 const _items = require('./items.json');
-const _itemsSorted = require('./sorted.json');
+const _sorted = require('./sorted.json');
 const _sugestions = require('./suggestions.json');
 const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
 	uniqueTokenPerInterval: 500,
 });
+import { suggestifyEngine } from './core/engine';
 
 const allowCors = (fn) => async (req, res) => {
 	const allowedOrigins = ['http://localhost:3000', 'https://suggestify.maxvanderschee.nl'];
 	const origin = req.headers.origin;
 
 	if (allowedOrigins.indexOf(origin) > -1) res.setHeader('Access-Control-Allow-Origin', origin);
+	// res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Credentials', true);
 	res.setHeader('Access-Control-Allow-Methods', 'POST');
 	res.setHeader(
@@ -46,8 +46,10 @@ const handler = async (req, res) => {
 	else
 		try {
 			let start = process.hrtime();
-			const items = await searchHandler(search.toLowerCase());
+			const items = await suggestifyEngine(search.toLowerCase(), _items, _sorted);
 			let stop = process.hrtime(start);
+
+			console.log('total:', (stop[0] * 1e9 + stop[1]) / 1e9);
 
 			return res
 				.status(200)
@@ -55,14 +57,6 @@ const handler = async (req, res) => {
 		} catch (error) {
 			return res.status(500).send('Woopsie, we will look into it!');
 		}
-};
-
-const searchHandler = (search) => {
-	if (search.length <= 3) {
-		return singleSearchHandler(search, _items, _itemsSorted);
-	} else {
-		return multiSearchHandler(search, _items, _itemsSorted);
-	}
 };
 
 const sanitize = (string) => {

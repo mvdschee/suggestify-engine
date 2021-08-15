@@ -1,6 +1,7 @@
 import { levenshtein } from './utils';
 import { config } from './config';
-export async function multiSearchHandler(search, items, sortedItems) {
+
+export async function suggestifyEngine(search, items, sortedItems) {
 	const char = search.charAt(0);
 	const itemList = sortedItems[char] ? sortedItems[char] : items;
 	const list = {
@@ -16,7 +17,6 @@ export async function multiSearchHandler(search, items, sortedItems) {
 		return;
 	};
 
-	// TODO: Alt words doesn't fit in new logic
 	const AltMatch = (item) => {
 		const distance = levenshtein(item, search);
 
@@ -26,7 +26,12 @@ export async function multiSearchHandler(search, items, sortedItems) {
 
 	for (let i = 0; i < itemList.length; i++) {
 		wordsMatch(itemList[i]);
-		AltMatch(itemList[i]);
+	}
+
+	if (list['match'].length <= config.ITEM_CAP) {
+		for (let i = 0; i < itemList.length; i++) {
+			AltMatch(itemList[i]);
+		}
 	}
 
 	const sortMatches = sortResults(list['match'], search);
