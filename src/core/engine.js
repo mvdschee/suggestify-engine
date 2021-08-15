@@ -1,54 +1,49 @@
 import { levenshtein } from './utils';
 import { config } from './config';
 
-export async function suggestifyEngine(search, items, sortedItems) {
-	const char = search.charAt(0);
-	const itemList = sortedItems[char] ? sortedItems[char] : items;
+export async function suggestifyEngine(userInput, _items, _sorted) {
+	const char = userInput.charAt(0);
+	const items = _sorted[char] ? _sorted[char] : _items;
+	const globalReg = new RegExp(userInput.replace(/\W+/g, '|'), 'i');
+
 	const list = {
 		match: [],
 		alt: [],
 	};
-	let results = [];
 
 	const wordsMatch = (item) => {
-		const reg = new RegExp(search.replace(/\W+/g, '|'), 'i');
-
-		if (reg.test(item)) list['match'].push(item);
+		if (globalReg.test(item)) list['match'].push(item);
 		return;
 	};
 
 	const AltMatch = (item) => {
-		const distance = levenshtein(item, search);
-
-		if (distance <= config.MIN_DISTANCE) list['alt'].push(item);
+		if (levenshtein(item, userInput) <= config.MIN_DISTANCE) list['alt'].push(item);
 		return;
 	};
 
-	for (let i = 0; i < itemList.length; i++) {
-		wordsMatch(itemList[i]);
+	for (let i = 0; i < items.length; i++) {
+		wordsMatch(items[i]);
 	}
 
 	if (list['match'].length <= config.ITEM_CAP) {
-		for (let i = 0; i < itemList.length; i++) {
-			AltMatch(itemList[i]);
+		for (let i = 0; i < items.length; i++) {
+			AltMatch(items[i]);
 		}
 	}
 
-	const sortMatches = sortResults(list['match'], search);
-
-	results = new Set([...sortMatches, ...list['alt'].sort()]);
+	const sortMatches = sortResults(list['match'], userInput);
+	const results = new Set([...sortMatches, ...list['alt'].sort()]);
 
 	return Promise.resolve([...results].slice(0, config.ITEM_CAP));
 }
 
-function sortResults(list, searchText) {
+function sortResults(list, userInput) {
 	const results = [];
-	const full = new RegExp(searchText, 'i');
-	const par = new RegExp(`${searchText.replace(/\W+/g, '|')}`, 'i');
+	const full = new RegExp(userInput, 'i');
+	const par = new RegExp(userInput.replace(/\W+/g, '|'), 'i');
 	const unsortedlist = {};
 
 	const unfilterd = list
-		.sort()
 		.filter((item) => {
 			// full match on first word
 			const m = full.exec(item);

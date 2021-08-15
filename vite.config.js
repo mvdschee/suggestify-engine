@@ -6,13 +6,13 @@ module.exports = {
 		target: 'esnext',
 		emptyOutDir: false,
 		lib: {
-			entry: path.resolve(__dirname, 'src/search.js'),
+			entry: path.resolve(__dirname, 'src/suggestions.js'),
 			formats: ['cjs'],
 		},
 		outDir: './api',
 		rollupOptions: {
 			output: {
-				entryFileNames: `search.js`,
+				entryFileNames: `suggestions.js`,
 				banner: `/*!
 * @project      ${pkg.name}
 * @author      	${pkg.author}
