@@ -1,10 +1,6 @@
 {
 	"name": "suggestify-vercel",
-	"version": "1.2.0",
 	"main": "./index.js",
-	"author": "Max van der Schee",
-	"license": "MIT",
-	"private": true,
 	"dependencies": {
 		"lambda-rate-limiter": "^3.0.0",
 		"suggestify-engine": "^1.2.0"
