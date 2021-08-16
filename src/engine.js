@@ -1,4 +1,4 @@
-export async function suggestifyEngine(userInput, _items, _sorted, options) {
+export default async function suggestifyEngine(userInput, _items, _sorted, options) {
 	const char = userInput.charAt(0);
 	const items = _sorted[char] ? _sorted[char] : _items;
 	const globalReg = new RegExp(userInput.replace(/\W+/g, '|'), 'i');
