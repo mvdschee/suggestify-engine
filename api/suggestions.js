@@ -1,8 +1,97 @@
-"use strict";
-/*!
-* @project      suggestify-engine
-* @author      	Max van der Schee <hello@maxvanderschee.nl>
-* @build        1629051822142
-* @release      1.2.0
-* @copyright    Copyright (c) 2021 Max van der Schee <hello@maxvanderschee.nl>
-*/const e={MIN_DISTANCE:3,ITEM_CAP:8,RATELIMIT_CAP:50,RATELIMIT_TEXT:"Too Many Requests",INTERNAL_ERROR:"Woopsie, we will look into it!",ALLOWED_ORIGINS:["http://localhost:3000","http://localhost:3001","https://suggestify.maxvanderschee.nl"],SANITIZE:{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","`":"&grave;","/":"&#x2F;"}};async function t(t,s,r){const n=t.charAt(0),o=r[n]?r[n]:s,l=new RegExp(t.replace(/\W+/g,"|"),"i"),a={match:[],alt:[]},i=s=>{((e,t)=>{if(!e.length)return t.length;if(!t.length)return e.length;const s=[];for(let r=0;r<=t.length;r++){s[r]=[r];for(let n=1;n<=e.length;n++)s[r][n]=0===r?n:Math.min(s[r-1][n]+1,s[r][n-1]+1,s[r-1][n-1]+(e[n-1]===t[r-1]?0:1))}return s[t.length][e.length]})(s,t)<=e.MIN_DISTANCE&&a.alt.push(s)};for(let e=0;e<o.length;e++)c=o[e],l.test(c)&&a.match.push(c);var c;if(a.match.length<=e.ITEM_CAP)for(let e=0;e<o.length;e++)i(o[e]);const u=function(e,t){const s=[],r=new RegExp(t,"i"),n=new RegExp(t.replace(/\W+/g,"|"),"i"),o={},l=e.filter((e=>{const t=r.exec(e);return!t||0!==t.index||(s.push(e),!1)})).filter((e=>!r.test(e)||(s.push(e),!1))).filter((e=>{const t=n.exec(e);return!t||(o[e]=t.index,!1)})),a=Object.keys(o).sort(((e,t)=>o[e]-o[t]));return[...s,...a,...l]}(a.match,t),h=new Set([...u,...a.alt.sort()]);return Promise.resolve([...h].slice(0,e.ITEM_CAP))}const s=require("./data/default.json"),r=require("./data/sorted.json"),n=require("./data/recommended.json"),o=require("lambda-rate-limiter")({interval:6e4,uniqueTokenPerInterval:500}),l=t=>t.replace(/[&<>"'/`]/gi,(t=>e.SANITIZE[t])).trim().toLowerCase();var a,i=(a=async(a,i)=>{const{headers:c,query:u}=a;try{await o.check(e.RATELIMIT_CAP,c["x-real-ip"])}catch(A){return i.status(429).send(e.RATELIMIT_TEXT)}const h=u.q?l(u.q):null;if(!h)return i.status(200).json({type:"suggestions",items:n,time:"0ms"});try{let e=process.hrtime();const n=await t(h,s,r);let o=process.hrtime(e);return i.status(200).json({type:n.length?"results":"empty",items:n,time:`${(1e3*o[0]+o[1]/1e6).toFixed(2)}ms`})}catch(g){return i.status(500).send(e.INTERNAL_ERROR)}},async(t,s)=>{const r=t.headers.origin;return e.ALLOWED_ORIGINS.indexOf(r)>-1&&s.setHeader("Access-Control-Allow-Origin",r),s.setHeader("Access-Control-Allow-Credentials",!0),s.setHeader("Access-Control-Allow-Methods","GET"),s.setHeader("Access-Control-Allow-Headers","X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"),await a(t,s)});module.exports=i;
+const suggestifyEngine = require('suggestify-engine');
+const rateLimit = require('lambda-rate-limiter')({
+	interval: 1000 * 60, // Our rate-limit interval, 1 minute
+	uniqueTokenPerInterval: 500,
+});
+
+const _default = require('./data/default.json');
+const _sorted = require('./data/sorted.json');
+const _recommended = require('./data/recommended.json');
+const config = {
+	RATELIMIT_CAP: 50,
+	RATELIMIT_TEXT: 'Too Many Requests',
+	INTERNAL_ERROR: 'Woopsie, we will look into it!',
+	ALLOWED_ORIGINS: ['http://localhost:3000', 'http://localhost:3001', 'https://suggestify.maxvanderschee.nl'],
+	SANITIZE: {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#x27;',
+		'`': '&grave;',
+		'/': '&#x2F;',
+	},
+};
+
+/**
+ *
+ * @param {(req: Request, res: Response) => Promise<Response> }
+ * @description Function to handle client call to suggestion engine
+ * @returns {Promise<Response>} Response
+ */
+const handler = async (req, res) => {
+	const { headers, query } = req;
+
+	try {
+		await rateLimit.check(config.RATELIMIT_CAP, headers['x-real-ip']);
+	} catch (e) {
+		return res.status(429).send(config.RATELIMIT_TEXT);
+	}
+
+	const userInput = query.q ? sanitize(query.q) : null;
+
+	if (!userInput) return res.status(200).json({ type: 'suggestions', items: _recommended, time: '0ms' });
+	else
+		try {
+			let start = process.hrtime();
+			const sortedItems = await suggestifyEngine(userInput, _default, _sorted, {
+				MIN_DISTANCE: 3,
+				ITEM_CAP: 8,
+			});
+			let stop = process.hrtime(start);
+
+			return res.status(200).json({
+				type: sortedItems.length ? 'results' : 'empty',
+				items: sortedItems,
+				time: `${(stop[0] * 1e3 + stop[1] / 1e6).toFixed(2)}ms`,
+			});
+		} catch (error) {
+			return res.status(500).send(config.INTERNAL_ERROR);
+		}
+};
+
+/**
+ *
+ * @param {string} text
+ * @description methode to sanitize text against common scripting tags
+ * @returns {string} santized lowercase text
+ */
+const sanitize = (input) => {
+	const reg = /[&<>"'/`]/gi;
+	return input
+		.replace(reg, (match) => config.SANITIZE[match])
+		.trim()
+		.toLowerCase();
+};
+
+/**
+ *
+ * @param {(req: Request, res: Response) => Promise<Response> } fn
+ * @description Wrapper methode to handle CORS settings
+ * @returns {(req: Request, res: Response) => Promise<Response>} methode wrapped with CORS headers
+ */
+const allowCors = (fn) => async (req, res) => {
+	const origin = req.headers.origin;
+
+	if (config.ALLOWED_ORIGINS.indexOf(origin) > -1) res.setHeader('Access-Control-Allow-Origin', origin);
+	res.setHeader('Access-Control-Allow-Credentials', true);
+	res.setHeader('Access-Control-Allow-Methods', 'GET');
+	res.setHeader(
+		'Access-Control-Allow-Headers',
+		'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+	);
+
+	return await fn(req, res);
+};
+
+export default allowCors(handler);

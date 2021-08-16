@@ -6,19 +6,18 @@ module.exports = {
 		target: 'esnext',
 		emptyOutDir: false,
 		lib: {
-			entry: path.resolve(__dirname, 'src/suggestions.js'),
+			entry: path.resolve(__dirname, 'src/engine.js'),
 			formats: ['cjs'],
 		},
-		outDir: './api',
+		outDir: './lib',
 		rollupOptions: {
 			output: {
-				entryFileNames: `suggestions.js`,
+				entryFileNames: `engine.js`,
 				banner: `/*!
-* @project      ${pkg.name}
-* @author      	${pkg.author}
-* @build        ${Date.now()}
-* @release      ${pkg.version}
-* @copyright    Copyright (c) 2021 ${pkg.author}
+* ${pkg.name} v${pkg.version}
+* (c) 2021 ${pkg.author}
+* @license MIT
+* Engine does Vroem Vroem..
 */`,
 			},
 		},

@@ -1,0 +1,22 @@
+{
+	"name": "suggestify-engine",
+	"description": "Suggestions engine for Suggestify",
+	"version": "1.2.1",
+	"author": "Max van der Schee",
+	"license": "MIT",
+	"main": "engine.js",
+	"scripts": {
+		"postinstall": "node -e \"try{require('./postinstall')}catch(e){}\""
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mvdschee/suggestify-engine.git"
+	},
+	"bugs": {
+		"url": "https://github.com/mvdschee/suggestify-engine/issues"
+	},
+	"homepage": "https://github.com/mvdschee/suggestify-engine",
+	"engines": {
+		"node": ">= 14.x"
+	}
+}
