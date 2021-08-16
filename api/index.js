@@ -1,13 +1,27 @@
-import { suggestifyEngine } from './core/engine';
-import { config } from './core/config';
-
-const _default = require('./data/default.json');
-const _sorted = require('./data/sorted.json');
-const _recommended = require('./data/recommended.json');
+const { suggestifyEngine } = require('suggestify-engine');
 const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
 	uniqueTokenPerInterval: 500,
 });
+
+const _default = require('./data/default.json');
+const _sorted = require('./data/sorted.json');
+const _recommended = require('./data/recommended.json');
+const config = {
+	RATELIMIT_CAP: 50,
+	RATELIMIT_TEXT: 'Too Many Requests',
+	INTERNAL_ERROR: 'Woopsie, we will look into it!',
+	ALLOWED_ORIGINS: ['http://localhost:3000', 'http://localhost:3001', 'https://suggestify.maxvanderschee.nl'],
+	SANITIZE: {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#x27;',
+		'`': '&grave;',
+		'/': '&#x2F;',
+	},
+};
 
 /**
  *
@@ -30,7 +44,10 @@ const handler = async (req, res) => {
 	else
 		try {
 			let start = process.hrtime();
-			const sortedItems = await suggestifyEngine(userInput, _default, _sorted);
+			const sortedItems = await suggestifyEngine(userInput, _default, _sorted, {
+				MIN_DISTANCE: 3,
+				ITEM_CAP: 8,
+			});
 			let stop = process.hrtime(start);
 
 			return res.status(200).json({

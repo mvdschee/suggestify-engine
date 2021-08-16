@@ -2,7 +2,7 @@
 	"name": "suggestify-engine",
 	"description": "Suggestions engine for Suggestify",
 	"version": "1.2.0",
-	"author": "Max van der Schee <hello@maxvanderschee.nl>",
+	"author": "Max van der Schee",
 	"license": "MIT",
 	"private": true,
 	"scripts": {
