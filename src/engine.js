@@ -32,47 +32,20 @@ export default async function suggestifyEngine(userInput, _items, _sorted, optio
 		}
 	}
 
-	const sortMatches = sortResults(list['match'], userInput);
+	const sortMatches = sortResults(userInput, list['match']);
 	const results = new Set([...sortMatches, ...list['alt'].sort()]);
 
 	return Promise.resolve([...results].slice(0, config.ITEM_CAP));
 }
 
-const sortResults = (list, userInput) => {
-	const results = [];
-	const full = new RegExp(userInput, 'i');
-	const par = new RegExp(userInput.replace(/\W+/g, '|'), 'i');
-	const unsortedlist = {};
-
-	const unfilterd = list
-		.filter((item) => {
-			// full match on first word
-			const m = full.exec(item);
-			if (m && m.index === 0) {
-				results.push(item);
-				return false;
-			} else return true;
-		})
-		.filter((item) => {
-			// full match on any word
-			if (full.test(item)) {
-				results.push(item);
-				return false;
-			} else return true;
-		})
-		.filter((item) => {
-			const m = par.exec(item);
-			if (m) {
-				unsortedlist[item] = m.index;
-				return false;
-			} else return true;
-		});
-
-	const sortedList = Object.keys(unsortedlist).sort((a, b) => {
-		return unsortedlist[a] - unsortedlist[b];
+const sortResults = (text, items) => {
+	return items.sort((a, b) => {
+		const i = levenshtein(text, a);
+		const j = levenshtein(text, b);
+		if (i > j) return 1;
+		if (i < j) return -1;
+		return 0;
 	});
-
-	return [...results, ...sortedList, ...unfilterd];
 };
 
 // levenshtein distance

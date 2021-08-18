@@ -1,7 +1,7 @@
 {
 	"name": "suggestify-engine",
 	"description": "Suggestions engine for Suggestify",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"author": "Max van der Schee",
 	"license": "MIT",
 	"private": true,
@@ -11,8 +11,5 @@
 	},
 	"devDependencies": {
 		"vite": "^2.4.4"
-	},
-	"dependencies": {
-		"lambda-rate-limiter": "^3.0.0"
 	}
 }
