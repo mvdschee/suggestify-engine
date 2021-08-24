@@ -1,7 +1,7 @@
 {
 	"name": "suggestify-engine",
 	"description": "Suggestions engine for Suggestify",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"author": "Max van der Schee",
 	"license": "MIT",
 	"main": "engine.js",
@@ -17,6 +17,6 @@
 	},
 	"homepage": "https://github.com/mvdschee/suggestify-engine",
 	"engines": {
-		"node": ">= 14.x"
+		"node": ">= 12.x"
 	}
 }
