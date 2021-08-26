@@ -48,7 +48,13 @@ const sortResults = (text, items) => {
 	});
 };
 
-// levenshtein distance
+/**
+ * levenshtein calculates the distance between
+ * two strings, it's good for typo's and if the result is wanted
+ * @param { string } s
+ * @param { string } t
+ * @returns { number } number
+ */
 const levenshtein = (s, t) => {
 	if (!s.length) return t.length;
 	if (!t.length) return s.length;

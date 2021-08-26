@@ -16,10 +16,10 @@ lru-cache@6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-suggestify-engine@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/suggestify-engine/-/suggestify-engine-1.2.2.tgz#ef6c704a74af6544925c9a5ddacca35f954b213f"
-  integrity sha512-HlDK1odGNfcMLaj9LfyNcGniEZtb5DxW2vd4ZxzLzhtsfixsIUMFydyt4yIEVwlorohz0SOK55p6zMfx7iYmDA==
+suggestify-engine@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/suggestify-engine/-/suggestify-engine-1.2.3.tgz#3d84b8d1ca3551410685b6ed533e2bf95b0e0fcc"
+  integrity sha512-EGzXUOnBH4SB78JlRgf1bQDyXWLIjgbYHUCUdYzxx9l9tHmKeboVULmwzWA0SyLlB8oMkywBjuZb0v1au4+cXg==
 
 yallist@^4.0.0:
   version "4.0.0"
