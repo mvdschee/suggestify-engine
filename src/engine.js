@@ -1,3 +1,31 @@
+export default class suggestifyEngine {
+	input;
+	defaultItems;
+	sortedItems;
+	items;
+	config;
+	char;
+	globalReg;
+	results = {
+		match: [],
+		alt: [],
+	};
+
+	constructor({ input = '', defaultItems, sortedItems, options }) {
+		this.input = input;
+		this.defaultItems = defaultItems;
+		this.sortedItems = sortedItems;
+		this.config = {
+			MIN_DISTANCE: options.MIN_DISTANCE | 3,
+			ITEM_CAP: options.ITEM_CAP | 8,
+		};
+		this.globalReg = new RegExp(input.replace(/\W+/g, '|'), 'i');
+
+		this.char = input.charAt(0);
+		this.items = sortedItems[char] ? sortedItems[char] : defaultItems;
+	}
+}
+
 export default async function suggestifyEngine(userInput, _items, _sorted, options) {
 	const char = userInput.charAt(0);
 	const items = _sorted[char] ? _sorted[char] : _items;
