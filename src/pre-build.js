@@ -1,5 +1,5 @@
-const _items = require('./data_two/default.json');
-const _recommended = require('./data_two/recommended.json');
+const _items = require('./data/default.json');
+const _recommended = require('./data/recommended.json');
 const fs = require('fs');
 
 module.exports.init = () => {
