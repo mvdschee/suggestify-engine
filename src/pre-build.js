@@ -1,4 +1,5 @@
-const _items = require('../api/items.json');
+const _items = require('./data/default.json');
+const _recommended = require('./data/recommended.json');
 const fs = require('fs');
 
 module.exports.init = () => {
@@ -16,7 +17,21 @@ module.exports.init = () => {
 };
 
 function writeToFile(obj) {
-	fs.writeFile('./api/sorted.json', JSON.stringify(obj), (err) => {
+	const dir = './api/data';
+
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir);
+	}
+
+	fs.writeFile('./api/data/sorted.json', JSON.stringify(obj), (err) => {
+		if (err) return console.error(err);
+	});
+
+	fs.writeFile('./api/data/default.json', JSON.stringify(_items), (err) => {
+		if (err) return console.error(err);
+	});
+
+	fs.writeFile('./api/data/recommended.json', JSON.stringify(_recommended), (err) => {
 		if (err) return console.error(err);
 	});
 }

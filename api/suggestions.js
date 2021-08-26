@@ -1,4 +1,5 @@
-const suggestifyEngine = require('suggestify-engine');
+const SuggestifyEngine = require('suggestify-engine');
+// const SuggestifyEngine = require('../lib/engine');
 const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
 	uniqueTokenPerInterval: 500,
@@ -23,6 +24,15 @@ const config = {
 	},
 };
 
+const suggestifyEngine = new SuggestifyEngine({
+	defaultItems: _default,
+	sortedItems: _sorted,
+	options: {
+		MIN_DISTANCE: 4,
+		ITEM_CAP: 8,
+	},
+});
+
 /**
  *
  * @param {(req: Request, res: Response) => Promise<Response> }
@@ -44,10 +54,7 @@ const handler = async (req, res) => {
 	else
 		try {
 			let start = process.hrtime();
-			const sortedItems = await suggestifyEngine(userInput, _default, _sorted, {
-				MIN_DISTANCE: 3,
-				ITEM_CAP: 8,
-			});
+			const sortedItems = await suggestifyEngine.getResults(userInput);
 			let stop = process.hrtime(start);
 
 			return res.status(200).json({
@@ -56,6 +63,7 @@ const handler = async (req, res) => {
 				time: `${(stop[0] * 1e3 + stop[1] / 1e6).toFixed(2)}ms`,
 			});
 		} catch (error) {
+			console.log(error);
 			return res.status(500).send(config.INTERNAL_ERROR);
 		}
 };
