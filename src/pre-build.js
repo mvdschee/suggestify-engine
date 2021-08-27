@@ -1,31 +1,41 @@
-const _items = require('./data/default.json');
-const _recommended = require('./data/recommended.json');
+const dataset = require('./city/default.json');
+const datasetReco = require('./city/recommended.json');
 const fs = require('fs');
 
 class Indexer {
 	indexSet = new Set();
 	index = [];
+	_items;
+	_recommended;
 
 	constructor() {
+		const tempItems = new Set(dataset.map((item) => item.toLowerCase()).sort());
+
+		this._items = [...tempItems];
+		this._recommended = datasetReco.map((item) => item.toLowerCase());
+
 		this.buildSortingIndex();
 	}
 
 	buildSortingIndex() {
 		// create uniek index char
-		for (let a = 0; a < _items.length; a++) {
-			const item = _items[a];
+		for (let a = 0; a < this._items.length; a++) {
+			const item = this._items[a];
 			const chars = item.split('');
 
 			for (let b = 0; b < chars.length; b++) {
 				const char = chars[b];
-				this.indexSet.add(char);
+				this.indexSet.add(char.toLowerCase());
 			}
 		}
 
 		// remove non-word characters.
-		[' ', '.', '-', '/', ','].map((e) => this.indexSet.delete(e));
+		[' ', '.', '-', '/', ',', '‘', '’', "'"].map((e) => this.indexSet.delete(e));
 
 		this.index = [...this.indexSet].sort();
+
+		console.log('Indexing set:');
+		console.log(...this.index);
 
 		this.sortItems();
 	}
@@ -37,7 +47,8 @@ class Indexer {
 			const char = this.index[a];
 			sorted[char] = [];
 
-			const unfilterd = _items
+			const unfilterd = this._items
+				.map((item) => item)
 				.filter((item) => item.includes(char))
 				.filter((item) => {
 					// first word first char
@@ -121,11 +132,11 @@ class Indexer {
 			if (err) return console.error(err);
 		});
 
-		fs.writeFile('./api/data/default.json', JSON.stringify(_items), (err) => {
+		fs.writeFile('./api/data/default.json', JSON.stringify(this._items), (err) => {
 			if (err) return console.error(err);
 		});
 
-		fs.writeFile('./api/data/recommended.json', JSON.stringify(_recommended), (err) => {
+		fs.writeFile('./api/data/recommended.json', JSON.stringify(this._recommended), (err) => {
 			if (err) return console.error(err);
 		});
 	}

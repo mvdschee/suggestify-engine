@@ -13,22 +13,23 @@ export default class SuggestifyEngine {
 		this.config = {
 			MIN_DISTANCE: options.MIN_DISTANCE | 3,
 			ITEM_CAP: options.ITEM_CAP | 8,
+			ITEM_CAP_ALT: (options.ITEM_CAP * 4) | 32,
 		};
 	}
 
 	async getResults(input) {
-		// let start = process.hrtime();
 		this.input = input;
 		this.globalReg = new RegExp(input.replace(/\W+/g, '|'), 'i');
 
 		this.char = input.charAt(0);
-		this.items = this.sortedItems[this.char] ? this.sortedItems[this.char] : this.defaultItems;
+		this.items = this.sortedItems[this.char] ? this.sortedItems[this.char] : [];
 
-		// let stop = process.hrtime(start);
-
-		// console.log(`${(stop[0] * 1e3 + stop[1] / 1e6).toFixed(2)}ms`);
 		return this.listFilter();
 	}
+
+	// let start = process.hrtime();
+	// let stop = process.hrtime(start);
+	// console.log(`${(stop[0] * 1e3 + stop[1] / 1e6).toFixed(2)}ms`);
 
 	listFilter() {
 		const list = {
@@ -46,23 +47,27 @@ export default class SuggestifyEngine {
 			return;
 		};
 
-		const reachedCap = (type) => {
-			return list[type].length >= this.config.ITEM_CAP;
+		const reachedCapMatch = () => {
+			return list['match'].length >= this.config.ITEM_CAP;
+		};
+
+		const reachedCapAlt = () => {
+			return list['alt'].length >= this.config.ITEM_CAP_ALT;
 		};
 
 		for (let i = 0; i < this.items.length; i++) {
 			wordsMatch(this.items[i]);
 			AltMatch(this.items[i]);
 
-			if (reachedCap('match') || reachedCap('alt')) break;
+			if (reachedCapMatch() || reachedCapAlt()) break;
 		}
 
-		if (reachedCap('match') && reachedCap('alt')) {
+		if (!reachedCapMatch() && !reachedCapAlt()) {
 			for (let i = 0; i < this.defaultItems.length; i++) {
 				wordsMatch(this.defaultItems[i]);
 				AltMatch(this.defaultItems[i]);
 
-				if (reachedCap('match') || reachedCap('alt')) break;
+				if (reachedCapMatch() || reachedCapAlt()) break;
 			}
 		}
 
