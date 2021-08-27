@@ -17,12 +17,16 @@ export default class SuggestifyEngine {
 	}
 
 	async getResults(input) {
+		// let start = process.hrtime();
 		this.input = input;
 		this.globalReg = new RegExp(input.replace(/\W+/g, '|'), 'i');
 
 		this.char = input.charAt(0);
 		this.items = this.sortedItems[this.char] ? this.sortedItems[this.char] : this.defaultItems;
 
+		// let stop = process.hrtime(start);
+
+		// console.log(`${(stop[0] * 1e3 + stop[1] / 1e6).toFixed(2)}ms`);
 		return this.listFilter();
 	}
 
@@ -42,15 +46,23 @@ export default class SuggestifyEngine {
 			return;
 		};
 
+		const reachedCap = (type) => {
+			return list[type].length >= this.config.ITEM_CAP;
+		};
+
 		for (let i = 0; i < this.items.length; i++) {
 			wordsMatch(this.items[i]);
 			AltMatch(this.items[i]);
+
+			if (reachedCap('match') || reachedCap('alt')) break;
 		}
 
-		if (list['match'].length <= this.config.ITEM_CAP && list['alt'].length <= this.config.ITEM_CAP) {
+		if (reachedCap('match') && reachedCap('alt')) {
 			for (let i = 0; i < this.defaultItems.length; i++) {
 				wordsMatch(this.defaultItems[i]);
 				AltMatch(this.defaultItems[i]);
+
+				if (reachedCap('match') || reachedCap('alt')) break;
 			}
 		}
 
