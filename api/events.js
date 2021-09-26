@@ -37,8 +37,10 @@ const supabase = supabaseJs.createClient(secrets.url, secrets.service_key);
 const handler = async (req, res) => {
 	const { headers, body } = req;
 
-	const value = sanitize(body.value);
-	const success = sanitize(body.success);
+	console.log(body);
+
+	// const value = sanitize(body.value);
+	// const success = sanitize(body.success);
 
 	try {
 		await rateLimit.check(config.RATELIMIT_CAP, headers['x-real-ip']);
@@ -46,17 +48,17 @@ const handler = async (req, res) => {
 		return res.status(429).send(config.RATELIMIT_TEXT);
 	}
 
-	if (value) {
-		try {
-			if (success === 'MISS' || success === 'HIT') await EventsHandler({ value, success });
-			await SuggstionHandler({ value });
+	// if (value) {
+	// 	try {
+	// 		if (success === 'MISS' || success === 'HIT') await EventsHandler({ value, success });
+	// 		await SuggstionHandler({ value });
 
-			return res.status(200).send(config.SUCCESS);
-		} catch (error) {
-			console.log(error);
-			return res.status(500).send(config.INTERNAL_ERROR);
-		}
-	}
+	// 		return res.status(200).send(config.SUCCESS);
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 		return res.status(500).send(config.INTERNAL_ERROR);
+	// 	}
+	// }
 };
 
 const SuggstionHandler = async ({ value }) => {
