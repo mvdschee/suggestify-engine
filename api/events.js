@@ -8,7 +8,7 @@ const config = {
 	RATELIMIT_CAP: 50,
 	RATELIMIT_TEXT: 'Too Many Requests',
 	INTERNAL_ERROR: 'Woopsie, we will look into it!',
-	SUCCESS: 'Ok',
+	SUCCESS: 'ok',
 	ALLOWED_ORIGINS: ['http://localhost:3000', 'http://localhost:3001', 'https://suggestify.maxvanderschee.nl'],
 	SANITIZE: {
 		'&': '&amp;',
@@ -37,8 +37,10 @@ const supabase = supabaseJs.createClient(secrets.url, secrets.service_key);
 const handler = async (req, res) => {
 	const { headers, body } = req;
 
-	const value = sanitize(body.value);
-	const success = sanitize(body.success);
+	const parsed = JSON.parse(body);
+
+	const value = sanitize(parsed.value);
+	const success = sanitize(parsed.success);
 
 	try {
 		await rateLimit.check(config.RATELIMIT_CAP, headers['x-real-ip']);
