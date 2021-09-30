@@ -14,12 +14,9 @@ module.exports = defineConfig({
 		rollupOptions: {
 			output: {
 				entryFileNames: `engine.js`,
-				banner: `/*!
-* ${pkg.name} v${pkg.version}
+				banner: `/*! ${pkg.name} v${pkg.version}
 * (c) 2021 ${pkg.author}
-* @license MIT
-* Engine does Vroem Vroem..
-*/`,
+* @license MIT */`,
 			},
 		},
 	},
