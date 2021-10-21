@@ -1,5 +1,5 @@
-const dataset = require('./city/default.json');
-const datasetReco = require('./city/recommended.json');
+const dataset = require('./data/default.json');
+const datasetReco = require('./data/recommended.json');
 const fs = require('fs');
 
 class Indexer {

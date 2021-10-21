@@ -12,7 +12,7 @@ const config = {
 	RATELIMIT_CAP: 50,
 	RATELIMIT_TEXT: 'Too Many Requests',
 	INTERNAL_ERROR: 'Woopsie, we will look into it!',
-	ALLOWED_ORIGINS: ['http://localhost:3000', 'http://localhost:3001', 'https://suggestify.maxvanderschee.nl'],
+	ALLOWED_ORIGINS: ['http://localhost:3000'],
 	SANITIZE: {
 		'&': '&amp;',
 		'<': '&lt;',

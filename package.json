@@ -1,15 +1,17 @@
 {
 	"name": "suggestify-engine",
 	"description": "Suggestions engine for Suggestify",
-	"version": "1.3.3",
+	"version": "1.3.4",
 	"author": "Max van der Schee",
 	"license": "MIT",
 	"private": true,
 	"scripts": {
 		"pre:build": "node ./src/pre-build.js",
-		"build": "vite build && cd api && yarn"
+		"build": "rollup --config && cd api && yarn"
 	},
 	"devDependencies": {
-		"vite": "^2.6.1"
+		"rollup": "^2.58.0",
+		"rollup-plugin-copy": "^3.4.0",
+		"rollup-plugin-terser": "^7.0.2"
 	}
 }
