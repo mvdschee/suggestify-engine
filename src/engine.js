@@ -63,7 +63,8 @@ export default class SuggestifyEngine {
 		}
 
 		if (!reachedCapMatch() && !reachedCapAlt()) {
-			for (let i = 0; i < this.defaultItems.length; i++) {
+			const l = this.defaultItems.length;
+			for (let i = 0; i < l; i++) {
 				wordsMatch(this.defaultItems[i]);
 				AltMatch(this.defaultItems[i]);
 
@@ -99,10 +100,12 @@ export default class SuggestifyEngine {
 	levenshtein(s, t) {
 		if (!s.length) return t.length;
 		if (!t.length) return s.length;
+		const tl = t.length;
+		const sl = s.length;
 		const arr = [];
-		for (let i = 0; i <= t.length; i++) {
+		for (let i = 0; i <= tl; i++) {
 			arr[i] = [i];
-			for (let j = 1; j <= s.length; j++) {
+			for (let j = 1; j <= sl; j++) {
 				arr[i][j] =
 					i === 0
 						? j
@@ -113,6 +116,6 @@ export default class SuggestifyEngine {
 						  );
 			}
 		}
-		return arr[t.length][s.length];
+		return arr[tl][sl];
 	}
 }
