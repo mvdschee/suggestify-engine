@@ -1,7 +1,7 @@
 {
 	"name": "suggestify-engine",
 	"description": "Suggestions engine for Suggestify",
-	"version": "1.3.4",
+	"version": "1.3.5",
 	"author": "Max van der Schee",
 	"license": "MIT",
 	"private": true,
