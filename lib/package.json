@@ -1,14 +1,20 @@
 {
     "name": "suggestify-engine",
     "description": "Suggestions engine for Suggestify",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "author": "Max van der Schee",
     "license": "MIT",
+    "private": false,
     "main": "./engine.cjs",
     "module": "./engine.mjs",
     "types": "./engine.d.ts",
+    "exports": {
+        "*": "./*"
+    },
     "files": [
-        "."
+        "engine.cjs",
+        "engine.mjs",
+        "engine.d.ts"
     ],
     "repository": {
         "type": "git",
@@ -17,8 +23,5 @@
     "bugs": {
         "url": "https://github.com/mvdschee/suggestify-engine/issues"
     },
-    "homepage": "https://github.com/mvdschee/suggestify-engine",
-    "engines": {
-        "node": ">= 12.x"
-    }
+    "homepage": "https://github.com/mvdschee/suggestify-engine"
 }
