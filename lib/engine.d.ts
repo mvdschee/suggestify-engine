@@ -5,21 +5,25 @@
  */
 declare type Options = {
     defaultItems: string[];
-    sortedItems: {
+    sortedItems?: {
         [key: string]: string[];
     };
-    options: {
-        MIN_DISTANCE: number;
-        ITEM_CAP: number;
-        ITEM_CAP_ALT: number;
+    options?: {
+        MIN_DISTANCE?: number;
+        ITEM_CAP?: number;
+        ITEM_CAP_ALT?: number;
     };
 };
 declare class SuggestifyEngine {
     input?: string;
     defaultItems: Options['defaultItems'];
-    sortedItems: Options['sortedItems'];
-    items?: string[];
-    config: Options['options'];
+    sortedItems?: Options['sortedItems'];
+    items: string[];
+    config: {
+        MIN_DISTANCE: number;
+        ITEM_CAP: number;
+        ITEM_CAP_ALT: number;
+    };
     char?: string;
     globalReg?: RegExp;
     constructor({ defaultItems, sortedItems, options }: Options);

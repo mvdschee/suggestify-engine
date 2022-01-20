@@ -1,16 +1,13 @@
 {
-    "name": "suggestify-engine",
+    "name": "@suggestify/engine",
     "description": "Suggestions engine for Suggestify",
-    "version": "1.4.1",
+    "version": "1.0.0",
     "author": "Max van der Schee",
     "license": "MIT",
     "private": false,
-    "main": "./engine.cjs",
-    "module": "./engine.mjs",
-    "types": "./engine.d.ts",
-    "exports": {
-        "*": "./*"
-    },
+    "main": "engine.cjs",
+    "module": "engine.mjs",
+    "types": "engine.d.ts",
     "files": [
         "engine.cjs",
         "engine.mjs",

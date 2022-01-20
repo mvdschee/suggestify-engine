@@ -6,22 +6,26 @@
 
 export type Options = {
     defaultItems: string[];
-    sortedItems: {
+    sortedItems?: {
         [key: string]: string[];
     };
-    options: {
-        MIN_DISTANCE: number;
-        ITEM_CAP: number;
-        ITEM_CAP_ALT: number;
+    options?: {
+        MIN_DISTANCE?: number;
+        ITEM_CAP?: number;
+        ITEM_CAP_ALT?: number;
     };
 };
 
 export default class SuggestifyEngine {
     input?: string;
     defaultItems: Options['defaultItems'];
-    sortedItems: Options['sortedItems'];
-    items?: string[];
-    config: Options['options'];
+    sortedItems?: Options['sortedItems'];
+    items: string[] = [];
+    config: {
+        MIN_DISTANCE: number;
+        ITEM_CAP: number;
+        ITEM_CAP_ALT: number;
+    };
     char?: string;
     globalReg?: RegExp;
 
@@ -29,9 +33,10 @@ export default class SuggestifyEngine {
         this.defaultItems = defaultItems;
         this.sortedItems = sortedItems;
         this.config = {
-            MIN_DISTANCE: options.MIN_DISTANCE | 3,
-            ITEM_CAP: options.ITEM_CAP | 8,
-            ITEM_CAP_ALT: (options.ITEM_CAP * 4) | 32,
+            MIN_DISTANCE: 3,
+            ITEM_CAP: 8,
+            ITEM_CAP_ALT: 32,
+            ...options,
         };
     }
 
@@ -40,7 +45,7 @@ export default class SuggestifyEngine {
         this.globalReg = new RegExp(input.replace(/\W+/g, '|'), 'i');
 
         this.char = input.charAt(0);
-        this.items = this.sortedItems[this.char] ? this.sortedItems[this.char] : [];
+        this.items = this.sortedItems && this.sortedItems[this.char] ? this.sortedItems[this.char] : [];
 
         return this.listFilter();
     }
@@ -76,10 +81,10 @@ export default class SuggestifyEngine {
             return list['alt'].length >= this.config.ITEM_CAP_ALT;
         };
 
-        const il = this.items!.length;
+        const il = this.items.length;
         for (let i = 0; i < il; i++) {
-            wordsMatch(this.items![i]);
-            AltMatch(this.items![i]);
+            wordsMatch(this.items[i]);
+            AltMatch(this.items[i]);
 
             if (reachedCapMatch() || reachedCapAlt()) break;
         }
