@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // ------------------------------------------------------------
 // PRE BUILD NOT INCLUDED IN BUILD
 // WILL BE MOVED TO SERVERLESS EXAMPLES ONCE DONE

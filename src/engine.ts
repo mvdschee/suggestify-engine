@@ -42,7 +42,7 @@ export default class SuggestifyEngine {
 
     public async getResults(input: string): Promise<string[]> {
         this.input = input;
-        this.globalReg = new RegExp(input.replace(/\W+/g, '|'), 'i');
+        this.globalReg = new RegExp(input.replace(/\s+/g, '|'), 'i');
 
         this.char = input.charAt(0);
         this.items = this.sortedItems && this.sortedItems[this.char] ? this.sortedItems[this.char] : [];

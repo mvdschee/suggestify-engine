@@ -3,7 +3,7 @@
  * (c) 2022 Max van der Schee
  * @license MIT
  */
-declare type Options = {
+export declare type Options = {
     defaultItems: string[];
     sortedItems?: {
         [key: string]: string[];
@@ -14,7 +14,7 @@ declare type Options = {
         ITEM_CAP_ALT?: number;
     };
 };
-declare class SuggestifyEngine {
+export default class SuggestifyEngine {
     input?: string;
     defaultItems: Options['defaultItems'];
     sortedItems?: Options['sortedItems'];
@@ -39,5 +39,3 @@ declare class SuggestifyEngine {
      */
     private levenshtein;
 }
-
-export { Options, SuggestifyEngine as default };
