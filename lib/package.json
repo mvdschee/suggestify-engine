@@ -15,10 +15,10 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/mvdschee/suggestify-engine.git"
+        "url": "https://github.com/suggestifyjs/suggestify-engine.git"
     },
     "bugs": {
-        "url": "https://github.com/mvdschee/suggestify-engine/issues"
+        "url": "https://github.com/suggestifyjs/suggestify-engine/issues"
     },
-    "homepage": "https://github.com/mvdschee/suggestify-engine"
+    "homepage": "https://github.com/suggestifyjs/suggestify-engine"
 }
