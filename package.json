@@ -9,6 +9,7 @@
     "scripts": {
         "dev": "tsc --watch",
         "pre:build": "node ./src/pre-build.js",
+        "benchmark": "node ./benchmark.js",
         "build": "unbuild",
         "lint": "eslint --ext .js,.ts .",
         "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""

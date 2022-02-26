@@ -3,19 +3,6 @@
  * (c) 2022 Max van der Schee
  * @license MIT
  */
-
-export type Options = {
-    defaultItems: string[];
-    sortedItems?: {
-        [key: string]: string[];
-    };
-    options?: {
-        MIN_DISTANCE?: number;
-        ITEM_CAP?: number;
-        ITEM_CAP_ALT?: number;
-    };
-};
-
 export default class SuggestifyEngine {
     input?: string;
     defaultItems: Options['defaultItems'];
@@ -146,3 +133,18 @@ export default class SuggestifyEngine {
         return arr[tl][sl];
     }
 }
+
+// -----------------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------------
+export type Options = {
+    defaultItems: string[];
+    sortedItems?: {
+        [key: string]: string[];
+    };
+    options?: {
+        MIN_DISTANCE?: number;
+        ITEM_CAP?: number;
+        ITEM_CAP_ALT?: number;
+    };
+};
