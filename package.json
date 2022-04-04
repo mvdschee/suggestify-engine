@@ -2,7 +2,7 @@
     "name": "@suggestify/engine",
     "description": "Suggestions engine for Suggestify",
     "packageManager": "yarn@3.1.1",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "author": "Max van der Schee",
     "license": "MIT",
     "private": true,

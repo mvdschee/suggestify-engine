@@ -15,7 +15,7 @@ declare type Options = {
     };
 };
 declare class SuggestifyEngine {
-    input?: string;
+    input: string;
     defaultItems: Options['defaultItems'];
     sortedItems?: Options['sortedItems'];
     items: string[];
@@ -27,7 +27,7 @@ declare class SuggestifyEngine {
     char?: string;
     globalReg?: RegExp;
     constructor({ defaultItems, sortedItems, options }: Options);
-    getResults(input: string): Promise<string[]>;
+    getResults(input: string): string[];
     private listFilter;
     private sortResults;
     /**

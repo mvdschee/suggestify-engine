@@ -17,7 +17,7 @@ export type Options = {
 };
 
 export default class SuggestifyEngine {
-    input?: string;
+    input!: string;
     defaultItems: Options['defaultItems'];
     sortedItems?: Options['sortedItems'];
     items: string[] = [];
@@ -40,7 +40,7 @@ export default class SuggestifyEngine {
         };
     }
 
-    public async getResults(input: string): Promise<string[]> {
+    public getResults(input: string): string[] {
         this.input = input;
         this.globalReg = new RegExp(input.replace(/\s+/g, '|'), 'i');
 
@@ -49,10 +49,6 @@ export default class SuggestifyEngine {
 
         return this.listFilter();
     }
-
-    // let start = process.hrtime();
-    // let stop = process.hrtime(start);
-    // console.log(`${(stop[0] * 1e3 + stop[1] / 1e6).toFixed(2)}ms`);
 
     private listFilter(): string[] {
         const list: {
@@ -64,7 +60,7 @@ export default class SuggestifyEngine {
         };
 
         const wordsMatch = (item: string): void => {
-            if (this.globalReg!.test(item)) list['match'].push(item);
+            if (this.globalReg?.test(item)) list['match'].push(item);
             return;
         };
 
@@ -100,8 +96,8 @@ export default class SuggestifyEngine {
         }
 
         const results = new Set([
-            ...this.sortResults(this.input!, list['match']),
-            ...this.sortResults(this.input!, list['alt']),
+            ...this.sortResults(this.input, list['match']),
+            ...this.sortResults(this.input, list['alt']),
         ]);
 
         return [...results].slice(0, this.config.ITEM_CAP);
